@@ -10,13 +10,12 @@ class CepList extends StatefulWidget {
 class _CepListState extends State<CepList> {
   @override
   void initState() {
-    print('iniciou o stado');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('buildou');
+    print('cepList build');
     return Scaffold(
       appBar: AppBar(
         title: Text('Ceps'),
@@ -42,9 +41,9 @@ class _CepListState extends State<CepList> {
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              final List<String> listCep = snapshot.data.getKeys().toList();
+              final List<String> listCep = snapshot.data.getKeys().toList().reversed.toList();
               return ListView.builder(
-                itemCount: listCep.length,
+                itemCount: 5,
                 itemBuilder: (context, index) {
                   return Card(
                     child: ListTile(
@@ -52,6 +51,7 @@ class _CepListState extends State<CepList> {
                         listCep[index],
                         style: TextStyle(fontSize: 24.0),
                       ),
+                      
                     ),
                   );
                 },
@@ -63,11 +63,13 @@ class _CepListState extends State<CepList> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => SearchCepForm(),
-            ),
-          );
+          Navigator.of(context)
+              .push(
+                MaterialPageRoute(
+                  builder: (context) => SearchCepForm(),
+                ),
+              )
+              .then((value) => setState(() {}));
         },
         child: Icon(Icons.add),
       ),

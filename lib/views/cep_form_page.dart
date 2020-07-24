@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:search_cep/database/local_storage.dart';
 import 'package:search_cep/services/cep_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SearchCepForm extends StatefulWidget {
   @override
@@ -9,7 +10,8 @@ class SearchCepForm extends StatefulWidget {
 }
 
 class _SearchCepForm extends State<SearchCepForm> {
-  var _searchCepController = TextEditingController();
+  MaskedTextController _searchCepController =
+      new MaskedTextController(mask: '00000-0000');
   bool _loading = false;
   bool _enableField = true;
   String _result;
@@ -33,7 +35,6 @@ class _SearchCepForm extends State<SearchCepForm> {
           children: <Widget>[
             _buildSearchCepTextField(),
             _buildSearchCepButton(),
-            _buildResultForm()
           ],
         ),
       ),
@@ -41,11 +42,14 @@ class _SearchCepForm extends State<SearchCepForm> {
   }
 
   Widget _buildSearchCepTextField() {
-    return TextField(
+    return TextFormField(
+      autocorrect: true,
+      maxLength: 9,
       autofocus: true,
+      maxLengthEnforced: true,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
-      decoration: InputDecoration(labelText: 'Cep'),
+      decoration: InputDecoration(labelText: 'CEP',labelStyle: TextStyle(fontSize: 20.0)),
       controller: _searchCepController,
       enabled: _enableField,
     );
@@ -55,8 +59,14 @@ class _SearchCepForm extends State<SearchCepForm> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: RaisedButton(
+        color: Colors.green,
         onPressed: _searchCep,
-        child: _loading ? _circularLoading() : Text('Adicionar'),
+        child: _loading
+            ? _circularLoading()
+            : Text(
+                'Adicionar',
+                style: TextStyle(color: Colors.white, fontSize: 20.0),
+              ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     );
@@ -79,32 +89,45 @@ class _SearchCepForm extends State<SearchCepForm> {
   }
 
   Future _searchCep() async {
-    _searching(true);
-
     final cep = _searchCepController.text;
 
-    final resultCep = await ViaCepService.fetchCep(cep: cep);
+    if (cep == '' || cep.length < 8) {
+      showAlertInfoCep(context);
+      return;
+    }
+    _searching(true);
+
+    final resultCep = await CepService.fetchCep(cep: cep);
     saveCep(resultCep.cep);
-    print(resultCep.localidade); // Exibindo somente a localidade no terminal
+
+    print(resultCep.localidade);
 
     setState(() {
-      _result = resultCep.toJson();
+      Navigator.of(context).pop();
     });
-
     _searching(false);
   }
 
-
-
   void saveCep(String cep) async {
     await LocalStorage.saveCepPreference(cep);
-    // Navigator.pop(context);
   }
+}
 
-  Widget _buildResultForm() {
-    return Container(
-      padding: EdgeInsets.only(top: 20.0),
-      child: Text(_result ?? ''),
-    );
-  }
+showAlertInfoCep(context) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "CEP não encontrado",
+    desc: "Insira um CEP valido!!",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () => Navigator.pop(context),
+        width: 120,
+      )
+    ],
+  ).show();
 }
