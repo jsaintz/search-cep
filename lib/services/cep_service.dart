@@ -6,7 +6,6 @@ class CepService {
     final response = await http.get('https://viacep.com.br/ws/$cep/json/');
     if (response.statusCode == 200) {
       return ResultCep.fromJson(response.body);
-      
     } else {
       throw Exception('Cep não encontrado!!!');
     }
