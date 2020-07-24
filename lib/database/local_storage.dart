@@ -10,4 +10,9 @@ class LocalStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(cep);
   }
+
+  static readCep(String cep) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(cep);
+  }
 }
