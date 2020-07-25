@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:search_cep/database/local_storage.dart';
 import 'package:search_cep/services/cep_service.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:search_cep/utils/alert_info.dart';
 
 class SearchCepForm extends StatefulWidget {
   @override
@@ -91,7 +91,7 @@ class _SearchCepForm extends State<SearchCepForm> {
   Future _searchCep() async {
     final cep = _searchCepController.text;
 
-    if (cep == '' || cep.length < 8) {
+    if (cep == '' || cep.length != 9) {
       showAlertInfoCep(context);
       return;
     }
@@ -99,8 +99,6 @@ class _SearchCepForm extends State<SearchCepForm> {
 
     final resultCep = await CepService.fetchCep(cep: cep);
     saveCep(resultCep.cep);
-
-    print(resultCep.localidade);
 
     setState(() {
       Navigator.of(context).pop();
@@ -111,23 +109,4 @@ class _SearchCepForm extends State<SearchCepForm> {
   void saveCep(String cep) async {
     await LocalStorage.saveCepPreference(cep);
   }
-}
-
-showAlertInfoCep(context) {
-  Alert(
-    context: context,
-    type: AlertType.warning,
-    title: "CEP não encontrado",
-    desc: "Insira um CEP valido!!",
-    buttons: [
-      DialogButton(
-        child: Text(
-          "OK",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        onPressed: () => Navigator.pop(context),
-        width: 120,
-      )
-    ],
-  ).show();
 }

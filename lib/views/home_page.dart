@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:search_cep/views/cep_form_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'cep_detail.dart';
+
 class CepList extends StatefulWidget {
   @override
   _CepListState createState() => _CepListState();
@@ -41,24 +43,94 @@ class _CepListState extends State<CepList> {
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              final List<String> listCep = snapshot.data.getKeys().toList().reversed.toList();
-              return ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(
-                        listCep[index],
-                        style: TextStyle(fontSize: 24.0),
+              final List<String> listCep =
+                  snapshot.data.getKeys().toList().reversed.toList();
+              if (listCep.length == 0) {
+                return Column(
+                  children: <Widget>[
+                    SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        title: Text(
+                          'Cep não cadastrado,\n Adicione um novo CEP',
+                          style: TextStyle(
+                            fontSize: 24.0,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      
                     ),
-                  );
-                },
-              );
+                    SizedBox(height: 80),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Image.asset(
+                        'assets/images/cep_icon.png',
+                        width: 100,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                );
+              }else if(listCep.length < 5){ 
+                 return ListView.builder(
+                  itemCount: listCep.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                              builder: (context) => CepDetail(),
+                            )).then((value) => setState(() {}));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Card(
+                          child: ListTile(
+                            title: Text(
+                              listCep[index],
+                              style: TextStyle(fontSize: 24.0),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              
+              }else {
+                return ListView.builder(
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                              builder: (context) => CepDetail(),
+                            )).then((value) => setState(() {}));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Card(
+                          child: ListTile(
+                            title: Text(
+                              listCep[index],
+                              style: TextStyle(fontSize: 24.0),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
               break;
           }
-          return Text('Nenhum Cep Encontrado!!!');
+          return Text('Cep não encontrado!!!');
         },
       ),
       floatingActionButton: FloatingActionButton(
