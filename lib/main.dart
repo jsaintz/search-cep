@@ -13,6 +13,7 @@ class _SearchCepState extends State<SearchCep> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Buscar Cep',
       debugShowCheckedModeBanner: false,
       home: LocationAnimation(),
     );
