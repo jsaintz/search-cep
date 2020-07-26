@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:search_cep/models/result_cep.dart';
 import 'package:search_cep/services/cep_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../models/result_cep.dart';
 
 class CepDetail extends StatefulWidget {
+  final String cep;
+
+  const CepDetail({Key key, @required this.cep}) : super(key: key);
+
   @override
   _CepDetailState createState() => _CepDetailState();
 }
@@ -14,39 +18,30 @@ class _CepDetailState extends State<CepDetail> {
     super.initState();
   }
 
-  var ceps = new CepModel();
-
-  Future _searchCep(ceps) async {
-    final data = await CepService.fetchCep(cep: ceps);
-    if (data != null) {
-      ceps = data;
-      ceps.add(new CepModel.fromJson(ceps.toString()));
-    }
-
-    // Map<String, dynamic> tes = json.decode(data.toJson());
-    return ceps;
+  Future<CepModel> _fetchCep() async {
+    return await CepService.fetchCep(widget.cep);
   }
 
   Widget _titleCep(String title, String subtitle, IconData icon) {
     return ListTile(
-        title: Text(title),
-        subtitle: Text(subtitle != "" ? subtitle : 'Sem dados'),
+        title: Text(title,style: TextStyle(fontSize: 25),),
+        subtitle: Text(subtitle != "" ? subtitle : 'Sem dados', style:TextStyle(fontSize: 20),),
         leading: Icon(icon, color: Colors.blue));
   }
 
   @override
   Widget build(BuildContext context) {
-    print('chegou no detalhe');
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Informações ',
+          'CEP - ${widget.cep}',
           style: TextStyle(fontSize: 20),
         ),
       ),
-      body: FutureBuilder<SharedPreferences>(
-        future: SharedPreferences.getInstance(),
+      body: FutureBuilder<CepModel>(
+        future: _fetchCep(),
         builder: (context, snapshot) {
+          final cep = snapshot.data;
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
@@ -65,21 +60,16 @@ class _CepDetailState extends State<CepDetail> {
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              // final listCep = snapshot.data.getKeys().first;
-              final String listCep =
-                  snapshot.data.getKeys().toList().reversed.first;
-              _searchCep(listCep);
               return Column(
                 children: <Widget>[
-                  _titleCep('Complemento', ceps.bairro, Icons.location_on),
+                  _titleCep('Rua', cep.logradouro, Icons.location_on),
+                  _titleCep('Complemento', cep.complemento,
+                      Icons.library_books),
+                  _titleCep('Bairro', cep.bairro, Icons.explore),
+                  _titleCep('Cidade', cep.localidade, Icons.location_city),
+                  _titleCep('Estado', cep.uf, Icons.my_location)
                 ],
               );
-              //     Icons.location_on);
-              // _titleCep('Complemento', _loadCep().complemento,
-              //     Icons.collections_bookmark);
-              // _titleCep('Bairro', _loadCep().bairro, Icons.explore);
-              // _titleCep('Cidade', _loadCep().localidade, Icons.location_city);
-              // _titleCep('UF', _loadCep().uf, Icons.location_searching);
               break;
           }
           return Text('Sem dados');

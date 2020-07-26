@@ -11,7 +11,7 @@ class SearchCepForm extends StatefulWidget {
 
 class _SearchCepForm extends State<SearchCepForm> {
   MaskedTextController _searchCepController =
-      new MaskedTextController(mask: '00000-0000');
+      new MaskedTextController(mask: '00000-000');
   bool _loading = false;
   bool _enableField = true;
   String _result;
@@ -83,24 +83,26 @@ class _SearchCepForm extends State<SearchCepForm> {
 
   Widget _circularLoading() {
     return Container(
-      height: 15.0,
-      width: 15.0,
-      child: CircularProgressIndicator(),
+      height: 15,
+      width: 15,
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      ),
     );
   }
 
-  Future _searchCep() async {
+  void _searchCep() async {
     final cep = _searchCepController.text;
 
-    if (cep == '' || cep.length != 9) {
+    if (cep.isEmpty || cep.length != 9) {
       showAlertInfoCep(context);
       return;
     }
     _searching(true);
 
-    final resultCep = await CepService.fetchCep(cep: cep);
+    final resultCep = await CepService.fetchCep(cep);
 
-    if (cep == resultCep.cep || resultCep.cep != null) {
+    if (cep == resultCep.cep || resultCep.cep.isEmpty) {
       saveCep(resultCep.cep);
       setState(() {
         Navigator.of(context).pop();

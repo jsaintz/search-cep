@@ -2,10 +2,10 @@ import 'package:http/http.dart' as http;
 import 'package:search_cep/models/result_cep.dart';
 
 class CepService {
-  static Future<CepModel> fetchCep({String cep}) async {
-    final response = await http.get('https://viacep.com.br/ws/$cep/json/');
-    
+  // ignore: missing_return
+  static Future<CepModel> fetchCep(String cep) async {
     try {
+      final response = await http.get('https://viacep.com.br/ws/$cep/json/');
       if (response.statusCode == 200) {
         return CepModel.fromJson(response.body);
       }
