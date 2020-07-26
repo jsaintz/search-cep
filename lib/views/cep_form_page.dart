@@ -49,7 +49,8 @@ class _SearchCepForm extends State<SearchCepForm> {
       maxLengthEnforced: true,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
-      decoration: InputDecoration(labelText: 'CEP',labelStyle: TextStyle(fontSize: 20.0)),
+      decoration: InputDecoration(
+          labelText: 'CEP', labelStyle: TextStyle(fontSize: 20.0)),
       controller: _searchCepController,
       enabled: _enableField,
     );
@@ -98,11 +99,15 @@ class _SearchCepForm extends State<SearchCepForm> {
     _searching(true);
 
     final resultCep = await CepService.fetchCep(cep: cep);
-    saveCep(resultCep.cep);
 
-    setState(() {
-      Navigator.of(context).pop();
-    });
+    if (cep == resultCep.cep || resultCep.cep != null) {
+      saveCep(resultCep.cep);
+      setState(() {
+        Navigator.of(context).pop();
+      });
+    } else {
+      showAlertInfoCep(context);
+    }
     _searching(false);
   }
 

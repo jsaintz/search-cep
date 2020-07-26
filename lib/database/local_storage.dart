@@ -7,8 +7,8 @@ class LocalStorage {
   }
 
 
-  static readCep(String cep) async {
+  static Future loadCep(String cep) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList(cep);
+    return prefs..getStringList(cep);
   }
 }

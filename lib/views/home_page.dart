@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:search_cep/database/local_storage.dart';
 import 'package:search_cep/views/cep_form_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -72,8 +73,8 @@ class _CepListState extends State<CepList> {
                     ),
                   ],
                 );
-              }else if(listCep.length < 5){ 
-                 return ListView.builder(
+              } else if (listCep.length <= 4) {
+                return ListView.builder(
                   itemCount: listCep.length,
                   itemBuilder: (context, index) {
                     return InkWell(
@@ -99,8 +100,7 @@ class _CepListState extends State<CepList> {
                     );
                   },
                 );
-              
-              }else {
+              } else {
                 return ListView.builder(
                   itemCount: 5,
                   itemBuilder: (context, index) {
@@ -110,7 +110,7 @@ class _CepListState extends State<CepList> {
                             context,
                             new MaterialPageRoute(
                               builder: (context) => CepDetail(),
-                            )).then((value) => setState(() {}));
+                            )).then((value) => setState(() => {}));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),

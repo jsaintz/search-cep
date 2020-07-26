@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:search_cep/database/local_storage.dart';
 import 'package:search_cep/models/result_cep.dart';
+import 'package:search_cep/services/cep_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CepDetail extends StatefulWidget {
@@ -16,14 +14,17 @@ class _CepDetailState extends State<CepDetail> {
     super.initState();
   }
 
-  ResultCep resultCep = ResultCep();
+  var ceps = new CepModel();
 
-  _loadCep() async {
-    final obj = ResultCep.fromJson(await LocalStorage.readCep("cep"));
-    final result = jsonDecode(obj.toJson());
-    setState(() {
-      resultCep = result;
-    });
+  Future _searchCep(ceps) async {
+    final data = await CepService.fetchCep(cep: ceps);
+    if (data != null) {
+      ceps = data;
+      ceps.add(new CepModel.fromJson(ceps.toString()));
+    }
+
+    // Map<String, dynamic> tes = json.decode(data.toJson());
+    return ceps;
   }
 
   Widget _titleCep(String title, String subtitle, IconData icon) {
@@ -64,13 +65,21 @@ class _CepDetailState extends State<CepDetail> {
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              Text(_loadCep().logradouro);
-              // _tileCep('Endereço', _loadCep().logradouro, Icons.location_on);
-              // _tileCep('Complemento', _loadCep().complemento,
+              // final listCep = snapshot.data.getKeys().first;
+              final String listCep =
+                  snapshot.data.getKeys().toList().reversed.first;
+              _searchCep(listCep);
+              return Column(
+                children: <Widget>[
+                  _titleCep('Complemento', ceps.bairro, Icons.location_on),
+                ],
+              );
+              //     Icons.location_on);
+              // _titleCep('Complemento', _loadCep().complemento,
               //     Icons.collections_bookmark);
-              // _tileCep('Bairro', _loadCep().bairro, Icons.explore);
-              // _tileCep('Cidade', _loadCep().localidade, Icons.location_city);
-              // _tileCep('UF', _loadCep().uf, Icons.location_searching);
+              // _titleCep('Bairro', _loadCep().bairro, Icons.explore);
+              // _titleCep('Cidade', _loadCep().localidade, Icons.location_city);
+              // _titleCep('UF', _loadCep().uf, Icons.location_searching);
               break;
           }
           return Text('Sem dados');
