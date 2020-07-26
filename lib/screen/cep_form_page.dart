@@ -102,7 +102,7 @@ class _SearchCepForm extends State<SearchCepForm> {
 
     final resultCep = await CepService.fetchCep(cep);
 
-    if (cep == resultCep.cep || resultCep.cep.isEmpty) {
+    if (cep == resultCep.cep || resultCep.cep !=null) {
       saveCep(resultCep.cep);
       setState(() {
         Navigator.of(context).pop();

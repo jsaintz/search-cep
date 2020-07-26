@@ -24,7 +24,7 @@ class _CepDetailState extends State<CepDetail> {
 
   Widget _titleCep(String title, String subtitle, IconData icon) {
     return ListTile(
-        title: Text(title,style: TextStyle(fontSize: 25),),
+        title: Text(title,style: TextStyle(fontSize: 22),),
         subtitle: Text(subtitle != "" ? subtitle : 'Sem dados', style:TextStyle(fontSize: 20),),
         leading: Icon(icon, color: Colors.blue));
   }
