@@ -1,7 +1,8 @@
+import 'package:brasil_fields/formatter/cep_input_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:search_cep/database/local_storage.dart';
 import 'package:search_cep/services/cep_service.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:search_cep/utils/alert_info.dart';
 
 class SearchCepForm extends StatefulWidget {
@@ -10,8 +11,7 @@ class SearchCepForm extends StatefulWidget {
 }
 
 class _SearchCepForm extends State<SearchCepForm> {
-  MaskedTextController _searchCepController =
-      new MaskedTextController(mask: '00000-000');
+  TextEditingController _searchCepController = TextEditingController();
   bool _loading = false;
   bool _enableField = true;
   String _result;
@@ -44,15 +44,22 @@ class _SearchCepForm extends State<SearchCepForm> {
   Widget _buildSearchCepTextField() {
     return TextFormField(
       autocorrect: true,
-      maxLength: 9,
+      maxLength: 10,
       autofocus: true,
       maxLengthEnforced: true,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
-          labelText: 'CEP', labelStyle: TextStyle(fontSize: 20.0)),
-      controller: _searchCepController,
+        labelText: 'CEP',
+        labelStyle: TextStyle(fontSize: 20.0),
+        counter: Offstage(),
+      ),
       enabled: _enableField,
+      controller: _searchCepController,
+      inputFormatters: [
+        WhitelistingTextInputFormatter.digitsOnly,
+        CepInputFormatter(),
+      ],
     );
   }
 
@@ -92,7 +99,7 @@ class _SearchCepForm extends State<SearchCepForm> {
   }
 
   void _searchCep() async {
-    final cep = _searchCepController.text;
+    final cep = _searchCepController.text.replaceAll('.', '');
 
     if (cep.isEmpty || cep.length != 9) {
       showAlertInfoCep(context);
@@ -102,7 +109,7 @@ class _SearchCepForm extends State<SearchCepForm> {
 
     final resultCep = await CepService.fetchCep(cep);
 
-    if (cep == resultCep.cep || resultCep.cep !=null) {
+    if (cep == resultCep.cep || resultCep.cep != null) {
       saveCep(resultCep.cep);
       setState(() {
         Navigator.of(context).pop();
