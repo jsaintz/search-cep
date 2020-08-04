@@ -33,4 +33,4 @@ Esse projeto foi desenvolvido com o Flutter e Dart.
 - [rflutter_alert](https://pub.dev/packages/rflutter_alert) para alertas
 - [flare_flutter](https://pub.dev/packages/flare_flutter) para animações
 - [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons) para icone de launcher
-
+- [mockito](https://pub.dev/packages/mockito) para testes unitarios
