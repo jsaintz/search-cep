@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-Widget _buildSearchCepTextField(TextInputFormatter inputFormatter,
-    TextEditingController _searchCepController) {
+Widget _buildSearchCepTextField(TextInputFormatter inputFormatter, TextEditingController _searchCepController) {
   return MaterialApp(
     home: MediaQuery(
       data: const MediaQueryData(size: Size(320, 480)),
@@ -16,7 +15,7 @@ Widget _buildSearchCepTextField(TextInputFormatter inputFormatter,
             autocorrect: true,
             maxLength: 10,
             autofocus: true,
-            maxLengthEnforced: true,
+            // maxLengthEnforcement: ,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
@@ -27,7 +26,7 @@ Widget _buildSearchCepTextField(TextInputFormatter inputFormatter,
             enabled: true,
             controller: _searchCepController,
             inputFormatters: [
-              WhitelistingTextInputFormatter.digitsOnly,
+              // WhitelistingTextInputFormatter.digitsOnly,
               CepInputFormatter(),
             ],
           ),
@@ -37,13 +36,10 @@ Widget _buildSearchCepTextField(TextInputFormatter inputFormatter,
   );
 }
 
-
 void main() {
-  testWidgets('Retornar o formato do cep valido',
-      (WidgetTester cepInput) async {
+  testWidgets('Retornar o formato do cep valido', (WidgetTester cepInput) async {
     final textController = TextEditingController();
-    when(await cepInput.pumpWidget(
-        _buildSearchCepTextField(CepInputFormatter(), textController)));
+    when(await cepInput.pumpWidget(_buildSearchCepTextField(CepInputFormatter(), textController)));
 
     when(await cepInput.enterText(find.byType(TextField), '09852210'));
     expect(textController.text, '09.852-210');

@@ -56,7 +56,7 @@ class _SearchCepForm extends State<SearchCepForm> {
       enabled: _enableField,
       controller: _searchCepController,
       inputFormatters: [
-        WhitelistingTextInputFormatter.digitsOnly,
+        // WhitelistingTextInputFormatter.digitsOnly,
         CepInputFormatter(),
       ],
     );

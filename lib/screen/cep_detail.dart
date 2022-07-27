@@ -67,11 +67,11 @@ class _CepDetailState extends State<CepDetail> {
             case ConnectionState.done:
               return Column(
                 children: <Widget>[
-                  _titleCep('Rua', cep.logradouro, Icons.location_on),
-                  _titleCep('Complemento', cep.complemento, Icons.library_books),
-                  _titleCep('Bairro', cep.bairro, Icons.explore),
-                  _titleCep('Cidade', cep.localidade, Icons.location_city),
-                  _titleCep('Estado', cep.uf, Icons.my_location)
+                  _titleCep('Rua', cep?.logradouro, Icons.location_on),
+                  _titleCep('Complemento', cep?.complemento, Icons.library_books),
+                  _titleCep('Bairro', cep?.bairro, Icons.explore),
+                  _titleCep('Cidade', cep?.localidade, Icons.location_city),
+                  _titleCep('Estado', cep?.uf, Icons.my_location)
                 ],
               );
           }
