@@ -38,7 +38,7 @@ class _CepListState extends State<CepList> {
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              List<String> listCep = snapshot.data.getKeys().toList().reversed.toList();
+              List<String> listCep = snapshot.data!.getKeys().toList().reversed.toList();
               if (listCep.length > 5) {
                 listCep = listCep.getRange(0, 5).toList();
               }

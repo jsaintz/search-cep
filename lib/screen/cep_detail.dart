@@ -22,14 +22,14 @@ class _CepDetailState extends State<CepDetail> {
     return await CepService.fetchCep(widget.cep);
   }
 
-  Widget _titleCep(String title, String subtitle, IconData icon) {
+  Widget _titleCep(String? title, String? subtitle, IconData icon) {
     return ListTile(
         title: Text(
-          title,
+          title!,
           style: TextStyle(fontSize: 22),
         ),
         subtitle: Text(
-          subtitle != "" ? subtitle : 'Sem dados',
+          subtitle != "" ? subtitle! : 'Sem dados',
           style: TextStyle(fontSize: 20),
         ),
         leading: Icon(icon, color: Colors.blue));
