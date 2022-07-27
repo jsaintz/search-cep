@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 class CepModel {
-  String cep;
-  String logradouro;
-  String complemento;
-  String bairro;
-  String localidade;
-  String uf;
-  String unidade;
-  String ibge;
-  String gia;
+  String? cep;
+  String? logradouro;
+  String? complemento;
+  String? bairro;
+  String? localidade;
+  String? uf;
+  String? unidade;
+  String? ibge;
+  String? gia;
 
   CepModel(
       {this.cep,
@@ -46,8 +46,7 @@ class CepModel {
         "gia": gia == null ? null : gia,
       };
 
-  factory CepModel.fromJson(String value) =>
-      CepModel.fromMap(json.decode(value));
+  factory CepModel.fromJson(String value) => CepModel.fromMap(json.decode(value));
 
   String toJson() => json.encode(toMap());
 }

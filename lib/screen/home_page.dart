@@ -17,8 +17,7 @@ class _CepListState extends State<CepList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text('Lista de Ceps'), automaticallyImplyLeading: false),
+      appBar: AppBar(title: Text('Lista de Ceps'), automaticallyImplyLeading: false),
       body: FutureBuilder<SharedPreferences>(
         future: SharedPreferences.getInstance(),
         builder: (context, snapshot) {
@@ -36,12 +35,10 @@ class _CepListState extends State<CepList> {
                   ],
                 ),
               );
-              break;
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              List<String> listCep =
-                  snapshot.data.getKeys().toList().reversed.toList();
+              List<String> listCep = snapshot.data.getKeys().toList().reversed.toList();
               if (listCep.length > 5) {
                 listCep = listCep.getRange(0, 5).toList();
               }
@@ -56,8 +53,7 @@ class _CepListState extends State<CepList> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  CepDetail(cep: listCep[index]),
+                              builder: (context) => CepDetail(cep: listCep[index]),
                             ));
                       },
                       child: Padding(
@@ -68,8 +64,7 @@ class _CepListState extends State<CepList> {
                           child: ListTile(
                             title: Text(
                               listCep[index],
-                              style: TextStyle(
-                                  fontSize: 24.0, color: Colors.white),
+                              style: TextStyle(fontSize: 24.0, color: Colors.white),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -79,7 +74,6 @@ class _CepListState extends State<CepList> {
                   },
                 );
               }
-              break;
           }
           return Text('Cep não encontrado!!!');
         },
@@ -103,7 +97,7 @@ class _CepListState extends State<CepList> {
 
 class EmptyListWidget extends StatelessWidget {
   const EmptyListWidget({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
