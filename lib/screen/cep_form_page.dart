@@ -1,5 +1,6 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:search_cep/database/local_storage.dart';
 import 'package:search_cep/services/cep_service.dart';
 import 'package:search_cep/utils/alert_info.dart';
@@ -45,7 +46,6 @@ class _SearchCepForm extends State<SearchCepForm> {
       autocorrect: true,
       maxLength: 10,
       autofocus: true,
-      // maxLengthEnforced: true,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -56,7 +56,8 @@ class _SearchCepForm extends State<SearchCepForm> {
       enabled: _enableField,
       controller: _searchCepController,
       inputFormatters: [
-        // WhitelistingTextInputFormatter.digitsOnly,
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(8),
         CepInputFormatter(),
       ],
     );
@@ -65,8 +66,11 @@ class _SearchCepForm extends State<SearchCepForm> {
   Widget _buildSearchCepButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
-      child: RaisedButton(
-        color: Colors.green,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.green,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
         onPressed: _searchCep,
         child: _loading
             ? _circularLoading()
@@ -74,7 +78,6 @@ class _SearchCepForm extends State<SearchCepForm> {
                 'Adicionar',
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     );
   }

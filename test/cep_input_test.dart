@@ -15,7 +15,6 @@ Widget _buildSearchCepTextField(TextInputFormatter inputFormatter, TextEditingCo
             autocorrect: true,
             maxLength: 10,
             autofocus: true,
-            // maxLengthEnforcement: ,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
@@ -26,7 +25,8 @@ Widget _buildSearchCepTextField(TextInputFormatter inputFormatter, TextEditingCo
             enabled: true,
             controller: _searchCepController,
             inputFormatters: [
-              // WhitelistingTextInputFormatter.digitsOnly,
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(8),
               CepInputFormatter(),
             ],
           ),
