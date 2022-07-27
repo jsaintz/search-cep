@@ -1,6 +1,5 @@
-import 'package:brasil_fields/formatter/cep_input_formatter.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:search_cep/database/local_storage.dart';
 import 'package:search_cep/services/cep_service.dart';
 import 'package:search_cep/utils/alert_info.dart';
@@ -14,7 +13,7 @@ class _SearchCepForm extends State<SearchCepForm> {
   TextEditingController _searchCepController = TextEditingController();
   bool _loading = false;
   bool _enableField = true;
-  String _result;
+  late String _result;
 
   @override
   void dispose() {
@@ -46,7 +45,7 @@ class _SearchCepForm extends State<SearchCepForm> {
       autocorrect: true,
       maxLength: 10,
       autofocus: true,
-      maxLengthEnforced: true,
+      // maxLengthEnforced: true,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -110,7 +109,7 @@ class _SearchCepForm extends State<SearchCepForm> {
     final resultCep = await CepService.fetchCep(cep);
 
     if (cep == resultCep.cep || resultCep.cep != null) {
-      saveCep(resultCep.cep);
+      saveCep(resultCep.cep!);
       setState(() {
         Navigator.of(context).pop();
       });
